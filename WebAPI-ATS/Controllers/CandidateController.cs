@@ -30,9 +30,9 @@ namespace WebAPI_ATS.Controllers
         {
             CandidateBLL bll = new CandidateBLL();
             bll._conn = _configuration.GetConnectionString("ATSAppCon");
-            CandidateInfo info = bll.Get();
+            List<CandidateInfo> lst = bll.Get();
 
-            return new JsonResult(info);
+            return new JsonResult(lst);
         }
 
         [HttpPost]

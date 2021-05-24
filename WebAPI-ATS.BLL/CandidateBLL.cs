@@ -8,7 +8,7 @@ namespace WebAPI_ATS.BLL
     public class CandidateBLL
     {
         public String _conn;
-        public CandidateInfo Get()
+        public List<CandidateInfo> Get()
         {
             CandidateDAL dal = new CandidateDAL();
             dal._conn = this._conn;

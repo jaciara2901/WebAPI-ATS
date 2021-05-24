@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 using System.Data;
 using WebAPI_ATS.Models;
+using WebAPI_ATS.BLL;
+using WebAPI_ATS.Model;
 
 namespace WebAPI_ATS.Controllers
 {
@@ -25,67 +27,29 @@ namespace WebAPI_ATS.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            string query = @" SELECT JobId, JobDescription, JobRequirements FROM dbo.Job ";
-            DataTable dt = new DataTable();
-            SqlDataReader sr;
-            using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ATSAppCon")))
-            {
-                conn.Open();
-                using (SqlCommand command = new SqlCommand(query, conn))
-                {
-                    sr = command.ExecuteReader();
-                    dt.Load(sr);
-                    sr.Close();
-                    conn.Close();
-                }
-            }
+            JobBLL bll = new JobBLL();
+            bll._conn = _configuration.GetConnectionString("ATSAppCon");
+            List<JobInfo> lst = bll.Get();
 
-            return new JsonResult(dt);
+            return new JsonResult(lst);
         }
 
         [HttpPost]
-        public JsonResult Post(Job j)
+        public JsonResult Post(JobInfo j)
         {
-            string query = @" INSERT INTO dbo.Job VALUES (" +
-                             "'" + j.JobDescription + "'," +
-                             "'" + j.JobRequirements + "')";
-            DataTable dt = new DataTable();
-            SqlDataReader sr;
-            using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ATSAppCon")))
-            {
-                conn.Open();
-                using (SqlCommand command = new SqlCommand(query, conn))
-                {
-                    sr = command.ExecuteReader();
-                    dt.Load(sr);
-                    sr.Close();
-                    conn.Close();
-                }
-            }
+            JobBLL bll = new JobBLL();
+            bll._conn = _configuration.GetConnectionString("ATSAppCon");
+            bll.Post(j);
 
             return new JsonResult("Added Successfully");
         }
 
         [HttpPut]
-        public JsonResult Put(Job j)
+        public JsonResult Put(JobInfo j)
         {
-            string query = @" UPDATE dbo.Job SET " +
-                             " JobDescription = '" + j.JobDescription + "'," +
-                             " JobRequirements = '" + j.JobRequirements + "'" +
-                             " WHERE JobId = " + j.JobId;
-            DataTable dt = new DataTable();
-            SqlDataReader sr;
-            using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ATSAppCon")))
-            {
-                conn.Open();
-                using (SqlCommand command = new SqlCommand(query, conn))
-                {
-                    sr = command.ExecuteReader();
-                    dt.Load(sr);
-                    sr.Close();
-                    conn.Close();
-                }
-            }
+            JobBLL bll = new JobBLL();
+            bll._conn = _configuration.GetConnectionString("ATSAppCon");
+            bll.Put(j);
 
             return new JsonResult("Updated Successfully");
         }
@@ -93,20 +57,9 @@ namespace WebAPI_ATS.Controllers
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            string query = @" DELETE FROM dbo.Job WHERE JobId = " + id;
-            DataTable dt = new DataTable();
-            SqlDataReader sr;
-            using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ATSAppCon")))
-            {
-                conn.Open();
-                using (SqlCommand command = new SqlCommand(query, conn))
-                {
-                    sr = command.ExecuteReader();
-                    dt.Load(sr);
-                    sr.Close();
-                    conn.Close();
-                }
-            }
+            JobBLL bll = new JobBLL();
+            bll._conn = _configuration.GetConnectionString("ATSAppCon");
+            bll.Delete(id);
 
             return new JsonResult("Deleted Successfully");
         }

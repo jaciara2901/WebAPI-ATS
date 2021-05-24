@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace WebAPI_ATS.Model
 {
-    public class Job
+    public class JobInfo
     {
-        private int JobId;
-        private string JobDescription;
-        private string JobRequirements;
+        public int JobId;
+        public string JobDescription;
+        public string JobRequirements;
     }
 }

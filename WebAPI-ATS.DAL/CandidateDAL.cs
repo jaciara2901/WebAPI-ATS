@@ -11,13 +11,12 @@ namespace WebAPI_ATS.DAL
     {
         public String _conn;
 
-        public CandidateInfo Get()
+        public List<CandidateInfo> Get()
         {
-            CandidateInfo info = new CandidateInfo();
+            List<CandidateInfo> lst = new List<CandidateInfo>();
 
             string query = @" SELECT CandidateId, CandidateName, CandidateAge, YearsOfExperience, ResumePath " +
                                  " FROM dbo.Candidate ";
-            DataTable dt = new DataTable();
             SqlDataReader dr;
             using (SqlConnection conn = new SqlConnection(_conn))
             {
@@ -26,14 +25,15 @@ namespace WebAPI_ATS.DAL
                 {
                     dr = command.ExecuteReader();
 
-                    if (dr.HasRows)
+                    while(dr.Read())
                     {
-                        dr.Read();
+                        CandidateInfo info = new CandidateInfo();
                         info.CandidateId = int.Parse(dr["CandidateId"].ToString());
                         info.CandidateName = dr["CandidateName"].ToString();
                         info.CandidateAge = int.Parse(dr["CandidateAge"].ToString());
                         info.YearsOfExperience = int.Parse(dr["YearsOfExperience"].ToString());
                         info.ResumePath = dr["ResumePath"].ToString();
+                        lst.Add(info);
                     }
 
                     dr.Close();
@@ -41,7 +41,7 @@ namespace WebAPI_ATS.DAL
                 }
             }
 
-            return info;
+            return lst;
         }
 
         public void Post(CandidateInfo c)
