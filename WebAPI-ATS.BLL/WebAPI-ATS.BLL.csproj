@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>WebAPI_ATS.BLL</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebAPI-ATS.DAL\WebAPI-ATS.DAL.csproj" />
+    <ProjectReference Include="..\WebAPI-ATS.Model\WebAPI-ATS.Model.csproj" />
+  </ItemGroup>
+
+</Project>
