@@ -1,16 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using System.Data.SqlClient;
 using System.Data;
-using WebAPI_ATS.Models;
+using System.Data.SqlClient;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using System.Net.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using WebAPI_ATS.BLL;
+using WebAPI_ATS.Model;
+using WebAPI_ATS.Models;
 
 namespace WebAPI_ATS.Controllers
 {
@@ -30,72 +28,29 @@ namespace WebAPI_ATS.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            string query = @" SELECT CandidateId, CandidateName, CandidateAge, YearsOfExperience, ResumePath " +
-                             " FROM dbo.Candidate ";
-            DataTable dt = new DataTable();
-            SqlDataReader sr;
-            using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ATSAppCon")))
-            {
-                conn.Open();
-                using (SqlCommand command = new SqlCommand(query, conn))
-                {
-                    sr = command.ExecuteReader();
-                    dt.Load(sr);
-                    sr.Close();
-                    conn.Close();
-                }
-            }
+            CandidateBLL bll = new CandidateBLL();
+            bll._conn = _configuration.GetConnectionString("ATSAppCon");
+            CandidateInfo info = bll.Get();
 
-            return new JsonResult(dt);
+            return new JsonResult(info);
         }
 
         [HttpPost]
-        public JsonResult Post (Candidate c)
+        public JsonResult Post (CandidateInfo c)
         {
-            string query = @" INSERT INTO dbo.Candidate VALUES (" +
-                             "'" + c.CandidateName + "'," +
-                             c.CandidateAge + "," +
-                             c.YearsOfExperience + "," +
-                             "'" + c.ResumePath + "')";
-            DataTable dt = new DataTable();
-            SqlDataReader sr;
-            using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ATSAppCon")))
-            {
-                conn.Open();
-                using (SqlCommand command = new SqlCommand(query, conn))
-                {
-                    sr = command.ExecuteReader();
-                    dt.Load(sr);
-                    sr.Close();
-                    conn.Close();
-                }
-            }
+            CandidateBLL bll = new CandidateBLL();
+            bll._conn = _configuration.GetConnectionString("ATSAppCon");
+            bll.Post(c);
 
             return new JsonResult("Added Successfully");
         }
 
         [HttpPut]
-        public JsonResult Put(Candidate c)
+        public JsonResult Put(CandidateInfo c)
         {
-            string query = @" UPDATE dbo.Candidate SET " +
-                             " CandidateName = '" + c.CandidateName + "'," +
-                             " CandidateAge = " + c.CandidateAge + "," +
-                             " YearsOfExperience = " + c.YearsOfExperience + "," +
-                             " ResumePath = '" + c.ResumePath + "'" +
-                             " WHERE CandidateId = " + c.CandidateId;
-            DataTable dt = new DataTable();
-            SqlDataReader sr;
-            using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ATSAppCon")))
-            {
-                conn.Open();
-                using (SqlCommand command = new SqlCommand(query, conn))
-                {
-                    sr = command.ExecuteReader();
-                    dt.Load(sr);
-                    sr.Close();
-                    conn.Close();
-                }
-            }
+            CandidateBLL bll = new CandidateBLL();
+            bll._conn = _configuration.GetConnectionString("ATSAppCon");
+            bll.Put(c);
 
             return new JsonResult("Updated Successfully");
         }
@@ -103,20 +58,9 @@ namespace WebAPI_ATS.Controllers
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            string query = @" DELETE FROM dbo.Candidate WHERE CandidateId = " + id;
-            DataTable dt = new DataTable();
-            SqlDataReader sr;
-            using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ATSAppCon")))
-            {
-                conn.Open();
-                using (SqlCommand command = new SqlCommand(query, conn))
-                {
-                    sr = command.ExecuteReader();
-                    dt.Load(sr);
-                    sr.Close();
-                    conn.Close();
-                }
-            }
+            CandidateBLL bll = new CandidateBLL();
+            bll._conn = _configuration.GetConnectionString("ATSAppCon");
+            bll.Delete(id);
 
             return new JsonResult("Deleted Successfully");
         }
@@ -145,26 +89,15 @@ namespace WebAPI_ATS.Controllers
             }
         }
 
-        [Route("api/Candidate/GetAllNames")]
+        [Route("GetAllNames")]
         [HttpGet]
         public JsonResult GetAllNames()
         {
-            string query = @" SELECT CandidateName FROM dbo.Candidate ";
-            DataTable dt = new DataTable();
-            SqlDataReader sr;
-            using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("ATSAppCon")))
-            {
-                conn.Open();
-                using (SqlCommand command = new SqlCommand(query, conn))
-                {
-                    sr = command.ExecuteReader();
-                    dt.Load(sr);
-                    sr.Close();
-                    conn.Close();
-                }
-            }
+            CandidateBLL bll = new CandidateBLL();
+            bll._conn = _configuration.GetConnectionString("ATSAppCon");
+            List<string> lst = bll.GetAllNames();
 
-            return new JsonResult(dt);
+            return new JsonResult(lst);
         }
 
     }

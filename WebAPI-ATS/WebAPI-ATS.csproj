@@ -14,5 +14,10 @@
     <Folder Include="Resumes\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WebAPI-ATS.BLL\WebAPI-ATS.BLL.csproj" />
+    <ProjectReference Include="..\WebAPI-ATS.Model\WebAPI-ATS.Model.csproj" />
+  </ItemGroup>
+
 
 </Project>
